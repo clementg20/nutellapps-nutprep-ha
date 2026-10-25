@@ -33,7 +33,7 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 type NutPrepConfigEntry = ConfigEntry[NutPrepCoordinator]
 
 BASE = {vol.Optional("config_entry_id"): cv.string}
-TAKE_SCHEMA = vol.Schema({**BASE, vol.Optional("comprimes"): vol.In([1, 2]), vol.Optional("heure"): cv.datetime})
+TAKE_SCHEMA = vol.Schema({**BASE, vol.Optional("heure"): cv.datetime})
 STOP_SCHEMA = vol.Schema(BASE)
 REPORT_SCHEMA = vol.Schema(
     {
@@ -108,7 +108,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async def take(call: ServiceCall) -> ServiceResponse:
         c = coordinator_for(call)
         at = call.data.get("heure")
-        return await run(c, c.api.take(call.data.get("comprimes"), iso(at) if at else None), "Prise")
+        return await run(c, c.api.take(iso(at) if at else None), "Prise")
 
     async def stop(call: ServiceCall) -> ServiceResponse:
         c = coordinator_for(call)

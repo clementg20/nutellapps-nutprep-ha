@@ -83,10 +83,9 @@ class NutPrepApi:
     async def state(self) -> dict[str, Any]:
         return await self._call("GET", "/state")
 
-    async def take(self, count: int | None = None, at: str | None = None) -> dict[str, Any]:
+    async def take(self, at: str | None = None) -> dict[str, Any]:
+        """Prise ; le nombre de comprimés est imposé par le site (2 pour commencer, 1 ensuite)."""
         body: dict[str, Any] = {}
-        if count:
-            body["count"] = count
         if at:
             body["at"] = at
         return await self._call("POST", "/pills", json=body)

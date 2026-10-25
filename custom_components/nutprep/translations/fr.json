@@ -97,12 +97,8 @@
   "services": {
     "prendre": {
       "name": "Noter une prise",
-      "description": "Prise de maintenant (ou à l'heure donnée) ; 2 comprimés d'office si la suite est à recommencer.",
+      "description": "Prise de maintenant (ou à l'heure donnée). Le nombre de comprimés est imposé : 2 pour commencer une suite, 1 ensuite.",
       "fields": {
-        "comprimes": {
-          "name": "Comprimés",
-          "description": "1 ou 2 (déduit si absent)."
-        },
         "heure": {
           "name": "Heure",
           "description": "Heure de la prise (maintenant si absente)."

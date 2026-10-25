@@ -1,9 +1,5 @@
 prendre:
   fields:
-    comprimes:
-      selector:
-        select:
-          options: ["1", "2"]
     heure:
       selector:
         datetime:

@@ -6,7 +6,7 @@ DOMAIN = "nutprep"
 SITE = "https://nutprep.cgrand.fr"
 API_BASE = f"{SITE}/ha/v1"
 AUTHORIZE_URL = f"{SITE}/autoriser"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 SCAN_INTERVAL = timedelta(minutes=5)
 TICK = timedelta(seconds=30)

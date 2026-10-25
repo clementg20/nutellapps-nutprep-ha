@@ -97,12 +97,8 @@
   "services": {
     "prendre": {
       "name": "Log a pill",
-      "description": "Pill now (or at the given time); 2 pills automatically when restarting.",
+      "description": "Pill taken now (or at the given time). The dose is set automatically: 2 pills to start, 1 afterwards.",
       "fields": {
-        "comprimes": {
-          "name": "Pills",
-          "description": "1 or 2 (inferred if omitted)."
-        },
         "heure": {
           "name": "Time",
           "description": "Time of the pill (now if omitted)."
