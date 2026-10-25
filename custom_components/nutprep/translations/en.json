@@ -1,0 +1,173 @@
+{
+  "config": {
+    "step": {
+      "authorize": {
+        "title": "Connect to NutPrep",
+        "description": "A NutPrep page opens: sign in (code sent by email), then authorize this Home Assistant.\n\nCode shown on the page: **{code}**"
+      },
+      "reauth_confirm": {
+        "title": "Reconnect NutPrep",
+        "description": "This Home Assistant's access was revoked or disabled in NutPrep. Reconnect it."
+      }
+    },
+    "abort": {
+      "cannot_connect": "The NutPrep server does not respond. Try again later.",
+      "denied": "Access denied on the NutPrep page.",
+      "expired": "The 10 minute delay is over. Start again.",
+      "already_configured": "This account is already linked to this Home Assistant (key updated).",
+      "reauth_successful": "NutPrep is reconnected.",
+      "wrong_account": "This is not the same account as the integration's."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Pill reminders",
+        "data": {
+          "reminders": "Reminders",
+          "notify": "Send to",
+          "lead": "First reminder before the planned time",
+          "every": "Then every"
+        },
+        "data_description": {
+          "notify": "Notification service (mobile app…) or Home Assistant notification.",
+          "every": "From the planned time until the end of the window (± 2 h)."
+        }
+      }
+    }
+  },
+  "selector": {
+    "notify_target": {
+      "options": {
+        "persistent_notification": "Home Assistant notification"
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "pill_before": "Reminder before pill time",
+      "pill_due": "Pill time",
+      "pill_late": "Pill late (reminder)",
+      "pill_missed": "Pill missed",
+      "pill_taken": "Pill taken",
+      "protection_started": "Protection started"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "protection": {
+        "name": "Protection",
+        "state": {
+          "active": "Protected",
+          "loading": "Protection soon",
+          "missed": "Pill missed",
+          "none": "No PrEP"
+        }
+      },
+      "next_pill": {
+        "name": "Next pill"
+      },
+      "last_pill": {
+        "name": "Last pill"
+      }
+    },
+    "event": {
+      "pill_event": {
+        "name": "PrEP",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "pill_before": "Reminder before",
+              "pill_due": "Pill time",
+              "pill_late": "Late",
+              "pill_missed": "Missed",
+              "pill_taken": "Taken",
+              "protection_started": "Protection started"
+            }
+          }
+        }
+      }
+    },
+    "button": {
+      "take": {
+        "name": "Take pill"
+      }
+    }
+  },
+  "services": {
+    "prendre": {
+      "name": "Log a pill",
+      "description": "Pill now (or at the given time); 2 pills automatically when restarting.",
+      "fields": {
+        "comprimes": {
+          "name": "Pills",
+          "description": "1 or 2 (inferred if omitted)."
+        },
+        "heure": {
+          "name": "Time",
+          "description": "Time of the pill (now if omitted)."
+        },
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Only if several accounts are linked."
+        }
+      }
+    },
+    "arreter": {
+      "name": "Stop pills",
+      "description": "Ends the current pill sequence.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Only if several accounts are linked."
+        }
+      }
+    },
+    "ajouter_rapport": {
+      "name": "Add an intercourse",
+      "description": "Intercourse (partners created if missing).",
+      "fields": {
+        "debut": {
+          "name": "Start",
+          "description": "Now if omitted."
+        },
+        "duree": {
+          "name": "Duration",
+          "description": "In minutes."
+        },
+        "partenaires": {
+          "name": "Partners",
+          "description": "Names."
+        },
+        "anonymes": {
+          "name": "Anonymous partners",
+          "description": "Number of unnamed partners."
+        },
+        "etiquettes": {
+          "name": "Tags",
+          "description": "TOP, BOTTOM, ORAL_GIVER, ORAL_RECEIVER… or free text."
+        },
+        "risque": {
+          "name": "Risky",
+          "description": "Risky intercourse."
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Personal notes."
+        },
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Only if several accounts are linked."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_entry": {
+      "message": "No NutPrep account loaded."
+    },
+    "several_entries": {
+      "message": "Several NutPrep accounts: set config_entry_id."
+    }
+  }
+}

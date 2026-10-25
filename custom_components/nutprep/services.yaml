@@ -1,0 +1,62 @@
+prendre:
+  fields:
+    comprimes:
+      selector:
+        select:
+          options: ["1", "2"]
+    heure:
+      selector:
+        datetime:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: nutprep
+
+arreter:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: nutprep
+
+ajouter_rapport:
+  fields:
+    debut:
+      selector:
+        datetime:
+    duree:
+      default: 30
+      selector:
+        number:
+          min: 0
+          max: 2880
+          step: 5
+          unit_of_measurement: min
+          mode: box
+    partenaires:
+      selector:
+        text:
+          multiple: true
+    anonymes:
+      default: 0
+      selector:
+        number:
+          min: 0
+          max: 99
+          mode: box
+    etiquettes:
+      selector:
+        text:
+          multiple: true
+    risque:
+      default: false
+      selector:
+        boolean:
+    notes:
+      selector:
+        text:
+          multiline: true
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: nutprep

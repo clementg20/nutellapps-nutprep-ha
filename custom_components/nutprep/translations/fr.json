@@ -1,0 +1,173 @@
+{
+  "config": {
+    "step": {
+      "authorize": {
+        "title": "Connexion à NutPrep",
+        "description": "Une page NutPrep s'ouvre : connectez-vous (code reçu par mail) puis autorisez ce Home Assistant.\n\nCode affiché sur la page : **{code}**"
+      },
+      "reauth_confirm": {
+        "title": "Reconnecter NutPrep",
+        "description": "L'accès de ce Home Assistant a été révoqué ou désactivé dans NutPrep. Reconnectez-le."
+      }
+    },
+    "abort": {
+      "cannot_connect": "Le serveur NutPrep ne répond pas. Réessayez plus tard.",
+      "denied": "Accès refusé sur la page NutPrep.",
+      "expired": "Le délai de 10 minutes est dépassé. Recommencez.",
+      "already_configured": "Ce compte est déjà relié à ce Home Assistant (clé mise à jour).",
+      "reauth_successful": "NutPrep est reconnecté.",
+      "wrong_account": "Ce n'est pas le même compte que celui de l'intégration."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Rappels de prise",
+        "data": {
+          "reminders": "Rappels",
+          "notify": "Envoyer à",
+          "lead": "Premier rappel avant l'heure prévue",
+          "every": "Puis toutes les"
+        },
+        "data_description": {
+          "notify": "Service de notification (application mobile…) ou notification Home Assistant.",
+          "every": "Dès l'heure prévue et jusqu'à la fin de la fenêtre (± 2 h)."
+        }
+      }
+    }
+  },
+  "selector": {
+    "notify_target": {
+      "options": {
+        "persistent_notification": "Notification Home Assistant"
+      }
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "pill_before": "Rappel avant l'heure de prise",
+      "pill_due": "Heure de prise",
+      "pill_late": "Prise en retard (rappel)",
+      "pill_missed": "Prise manquée",
+      "pill_taken": "Prise notée",
+      "protection_started": "Début de la protection"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "protection": {
+        "name": "Protection",
+        "state": {
+          "active": "Protégé",
+          "loading": "Bientôt protégé",
+          "missed": "Prise manquée",
+          "none": "Pas de PrEP"
+        }
+      },
+      "next_pill": {
+        "name": "Prochaine prise"
+      },
+      "last_pill": {
+        "name": "Dernière prise"
+      }
+    },
+    "event": {
+      "pill_event": {
+        "name": "PrEP",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "pill_before": "Rappel avant",
+              "pill_due": "Heure de prise",
+              "pill_late": "En retard",
+              "pill_missed": "Prise manquée",
+              "pill_taken": "Prise notée",
+              "protection_started": "Début de la protection"
+            }
+          }
+        }
+      }
+    },
+    "button": {
+      "take": {
+        "name": "Prise"
+      }
+    }
+  },
+  "services": {
+    "prendre": {
+      "name": "Noter une prise",
+      "description": "Prise de maintenant (ou à l'heure donnée) ; 2 comprimés d'office si la suite est à recommencer.",
+      "fields": {
+        "comprimes": {
+          "name": "Comprimés",
+          "description": "1 ou 2 (déduit si absent)."
+        },
+        "heure": {
+          "name": "Heure",
+          "description": "Heure de la prise (maintenant si absente)."
+        },
+        "config_entry_id": {
+          "name": "Compte",
+          "description": "Seulement si plusieurs comptes sont reliés."
+        }
+      }
+    },
+    "arreter": {
+      "name": "Arrêter les prises",
+      "description": "Met fin à la suite de prises en cours.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Compte",
+          "description": "Seulement si plusieurs comptes sont reliés."
+        }
+      }
+    },
+    "ajouter_rapport": {
+      "name": "Ajouter un rapport",
+      "description": "Rapport sexuel (partenaires créés s'ils n'existent pas).",
+      "fields": {
+        "debut": {
+          "name": "Début",
+          "description": "Maintenant si absent."
+        },
+        "duree": {
+          "name": "Durée",
+          "description": "En minutes."
+        },
+        "partenaires": {
+          "name": "Partenaires",
+          "description": "Noms."
+        },
+        "anonymes": {
+          "name": "Partenaires anonymes",
+          "description": "Nombre de partenaires non nommés."
+        },
+        "etiquettes": {
+          "name": "Étiquettes",
+          "description": "TOP, BOTTOM, ORAL_GIVER, ORAL_RECEIVER… ou libres."
+        },
+        "risque": {
+          "name": "À risque",
+          "description": "Rapport à risque."
+        },
+        "notes": {
+          "name": "Notes",
+          "description": "Notes personnelles."
+        },
+        "config_entry_id": {
+          "name": "Compte",
+          "description": "Seulement si plusieurs comptes sont reliés."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_entry": {
+      "message": "Aucun compte NutPrep chargé."
+    },
+    "several_entries": {
+      "message": "Plusieurs comptes NutPrep : précisez config_entry_id."
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "domain": "nutprep",
+  "name": "NutPrep",
+  "codeowners": ["@clementg20"],
+  "config_flow": true,
+  "dependencies": ["http", "frontend"],
+  "documentation": "https://github.com/clementg20/nutellapps-nutprep-ha",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/clementg20/nutellapps-nutprep-ha/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
