@@ -6,7 +6,7 @@ DOMAIN = "nutprep"
 SITE = "https://nutprep.cgrand.fr"
 API_BASE = f"{SITE}/ha/v1"
 AUTHORIZE_URL = f"{SITE}/autoriser"
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 
 SCAN_INTERVAL = timedelta(minutes=5)
 TICK = timedelta(seconds=30)
@@ -24,4 +24,4 @@ DEFAULT_EVERY = 30
 TRIGGERS = ["pill_before", "pill_due", "pill_late", "pill_missed", "pill_taken", "protection_started"]
 BUS_EVENT = "nutprep_event"
 STATIC_URL = "/nutprep_static"
-CARD_URL = f"{STATIC_URL}/nutprep-card.js?v={VERSION}"
+LOADER_URL = f"{STATIC_URL}/loader.js?v={VERSION}"

@@ -6,7 +6,6 @@ import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 import voluptuous as vol
 
@@ -22,7 +21,7 @@ from homeassistant.helpers.typing import ConfigType
 from homeassistant.util import dt as dt_util
 
 from .api import NutPrepApi, NutPrepAuthError, NutPrepError
-from .const import CARD_URL, CONF_TOKEN, DOMAIN, STATIC_URL
+from .const import CONF_TOKEN, DOMAIN, LOADER_URL, STATIC_URL
 from .coordinator import NutPrepCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -49,23 +48,6 @@ REPORT_SCHEMA = vol.Schema(
 )
 
 
-LOADER_JS = """
-const url = location.origin + '%s';
-let n = 0, busy = false;
-const load = () => {
-  if (busy || customElements.get('nutprep-card')) return;
-  busy = true;
-  import(n ? url + '&r=' + n : url).then(() => { busy = false; }, () => {
-    busy = false; n += 1;
-    setTimeout(load, Math.min(30000, 1000 * 2 ** Math.min(n, 5)));
-  });
-};
-load();
-addEventListener('online', load);
-addEventListener('pageshow', load);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
-"""
-
 
 
 def iso(value: datetime) -> str:
@@ -80,7 +62,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     await hass.http.async_register_static_paths(
         [StaticPathConfig(STATIC_URL, str(Path(__file__).parent / "frontend"), cache_headers=True)]
     )
-    add_extra_js_url(hass, "data:text/javascript," + quote(LOADER_JS % CARD_URL))
+    add_extra_js_url(hass, LOADER_URL)
 
     def coordinator_for(call: ServiceCall) -> NutPrepCoordinator:
         entry_id = call.data.get("config_entry_id")
