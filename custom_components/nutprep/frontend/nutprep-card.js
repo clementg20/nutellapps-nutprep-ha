@@ -17,8 +17,8 @@ const store = {
   set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* stockage indisponible */ } },
 };
 const DURATIONS = [15, 30, 60, 90, 120];
-const QUICK = [0, -15, -30, -60];
-const ROW = 30; // hauteur d'une ligne des roues (px), comme dans la feuille
+const QUICK = [0, -15, -30, -60, -120];
+const ROW = 36; // hauteur d'une ligne des roues (px), comme dans la feuille
 
 const PHASES = {
   active: ['var(--success-color, #43a047)', 'mdi:shield-check', 'Protection active'],
@@ -111,7 +111,7 @@ class NutPrepCard extends HTMLElement {
       </div>` : ''}`;
   }
 
-  // Frise : le jour figure dans la colonne de l'heure, sur la première ligne du jour.
+  // Frise : un titre par jour, puis une ligne par événement (présentation de la 1.0, jugée plus lisible).
   timeline(a) {
     let html = '';
     let d = '';
@@ -119,11 +119,11 @@ class NutPrepCard extends HTMLElement {
       const f = ITEMS[e.type];
       if (!f) continue;
       const label = dayShort(e.at);
+      if (label !== d) { html += `<div class="day">${esc(label)}</div>`; d = label; }
       const [icon, text, detail] = f(e);
-      html += `<div class="item p-${esc(e.period)}"><span class="time">${label !== d ? `<b>${esc(label)}</b>` : ''}${hm(e.at)}</span><span class="dot"></span>
-        <ha-icon class="ico t-${esc(e.type)}" icon="${icon}"></ha-icon><span class="text">${esc(text)}${detail ? ` <small>${esc(detail)}</small>` : ''}</span>
+      html += `<div class="item p-${esc(e.period)}"><span class="time">${hm(e.at)}</span><span class="dot"></span>
+        <ha-icon class="ico t-${esc(e.type)}" icon="${icon}"></ha-icon><span class="text">${esc(text)}${detail ? ` <small>· ${esc(detail)}</small>` : ''}</span>
         ${e.status ? `<ha-icon class="st s-${esc(e.status)}" icon="${STATUS[e.status]}"></ha-icon>` : ''}</div>`;
-      d = label;
     }
     return `<div class="tl">${html || '<div class="empty">Rien sur 30 jours</div>'}</div>`;
   }
@@ -276,25 +276,24 @@ const CSS = `
   .more { margin-left: auto; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: var(--secondary-text-color); }
   .more:hover { background: var(--secondary-background-color); }
   .more ha-icon { --mdc-icon-size: 16px; }
-  .tl { margin-top: 8px; max-height: 320px; overflow-y: auto; }
-  .item { position: relative; display: flex; align-items: center; gap: 6px; min-height: 26px; font-size: 13px; }
-  .item::before { content: ""; position: absolute; left: 44px; top: 0; bottom: 0; border-left: 2px solid var(--disabled-text-color, #666); }
+  .tl { margin-top: 8px; max-height: 360px; overflow-y: auto; }
+  .day { font-weight: 700; font-size: 13px; padding: 8px 0 4px 56px; text-transform: capitalize; }
+  .item { position: relative; display: flex; align-items: center; gap: 8px; min-height: 30px; font-size: 14px; }
+  .item::before { content: ""; position: absolute; left: 47px; top: 0; bottom: 0; border-left: 3px solid var(--disabled-text-color, #666); }
   .item.p-protected::before { border-left-color: var(--success-color, #43a047); }
-  .item.p-pending::before { border-left: 2px dashed var(--primary-color); }
-  .time { width: 38px; flex: none; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; font-size: 11px;
-    color: var(--secondary-text-color); font-variant-numeric: tabular-nums; }
-  .time b { color: var(--primary-text-color); font-size: 10px; font-weight: 600; white-space: nowrap; }
-  .dot { position: relative; z-index: 1; width: 8px; height: 8px; margin: 0 2px 0 1px; border-radius: 50%; background: var(--disabled-text-color, #666); flex: none; }
+  .item.p-pending::before { border-left: 3px dashed var(--primary-color); }
+  .time { width: 38px; flex: none; text-align: right; font-size: 12px; color: var(--secondary-text-color); font-variant-numeric: tabular-nums; }
+  .dot { position: relative; z-index: 1; width: 9px; height: 9px; margin: 0 4px 0 1px; border-radius: 50%; background: var(--disabled-text-color, #666); flex: none; }
   .p-protected .dot { background: var(--success-color, #43a047); }
   .p-pending .dot { background: var(--primary-color); }
-  .ico { --mdc-icon-size: 16px; color: var(--primary-color); flex: none; }
+  .ico { --mdc-icon-size: 18px; color: var(--primary-color); flex: none; }
   .t-INTERCOURSE { color: #ff6b8a; }
   .t-PROTECTION_START { color: var(--success-color, #43a047); }
   .t-MISSED { color: var(--error-color, #e53935); }
   .t-END, .t-STOP { color: var(--secondary-text-color); }
   .text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .text small { color: var(--secondary-text-color); font-size: 12px; }
-  .st { --mdc-icon-size: 14px; flex: none; }
+  .text small { color: var(--secondary-text-color); font-size: 13px; }
+  .st { --mdc-icon-size: 16px; flex: none; }
   .s-protected { color: var(--success-color, #43a047); }
   .s-pending { color: var(--primary-color); }
   .s-unprotected { color: var(--error-color, #e53935); }
@@ -313,18 +312,21 @@ const CSS = `
   .chips .lead { --mdc-icon-size: 16px; color: var(--secondary-text-color); }
   .chip { flex: none; height: 28px; padding: 0 10px; border-radius: 14px; border: 1px solid var(--divider-color); font-size: 12px; white-space: nowrap; color: var(--secondary-text-color); }
   .chip.on { border-color: var(--primary-color); background: var(--primary-color); color: var(--text-primary-color, #fff); }
-  .picker { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; }
-  .days { grid-column: 1 / -1; }
-  .clock { position: relative; display: flex; align-items: center; padding: 0 6px; border-radius: 12px; background: var(--secondary-background-color); }
-  .clock::before { content: ""; position: absolute; left: 4px; right: 4px; top: 50%; height: ${ROW}px; transform: translateY(-50%); border-radius: 8px;
+  /* Sélecteur, de haut en bas sur toute la largeur : jours, heure centrée, raccourcis en parts égales */
+  .picker { display: flex; flex-direction: column; gap: 8px; }
+  .days .chip, .quick .chip { height: 30px; font-size: 13px; }
+  .quick { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  .quick .chip { padding: 0 4px; }
+  .clock { position: relative; display: flex; align-items: center; justify-content: center; gap: 4px; border-radius: 12px; background: var(--secondary-background-color); }
+  .clock::before { content: ""; position: absolute; left: 6px; right: 6px; top: 50%; height: ${ROW}px; transform: translateY(-50%); border-radius: 8px;
     background: color-mix(in srgb, var(--primary-color) 20%, transparent); pointer-events: none; }
-  .wheel { position: relative; width: 38px; height: ${ROW * 3}px; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; overscroll-behavior: contain;
-    -webkit-mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent); mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent); }
+  .wheel { position: relative; width: 64px; height: ${ROW * 3}px; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; overscroll-behavior: contain;
+    -webkit-mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); }
   .wheel::-webkit-scrollbar, .days::-webkit-scrollbar { display: none; }
   .wpad, .wopt { height: ${ROW}px; line-height: ${ROW}px; text-align: center; }
-  .wopt { scroll-snap-align: center; font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--secondary-text-color); cursor: pointer; user-select: none; }
+  .wopt { scroll-snap-align: center; font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--secondary-text-color); cursor: pointer; user-select: none; }
   .wopt.on { color: var(--primary-text-color); }
-  .sep { position: relative; font-size: 18px; font-weight: 600; }
+  .sep { position: relative; font-size: 26px; font-weight: 600; }
   .row { display: flex; gap: 8px; align-items: center; }
   .row input { flex: 1; min-width: 0; height: 36px; padding: 0 10px; border: 1px solid var(--divider-color); border-radius: 10px;
     background: var(--card-background-color); color: var(--primary-text-color); font: inherit; }
