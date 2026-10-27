@@ -94,17 +94,18 @@ class NutPrepCard extends HTMLElement {
     const late = from && now > ms(a.next_planned);
     const pending = a.nutprep_pending ?? [];
     this._card.innerHTML = `
-      <div class="head" data-act="toggle" role="button" tabindex="0" aria-expanded="${this._open}">
-        <div class="badge" style="--c:${color}"><ha-icon icon="${icon}"></ha-icon></div>
-        <div class="txt"><div class="primary">${title}${pending.length ? `<span class="count" title="Rapports en attente de prises"><ha-icon icon="mdi:heart"></ha-icon>${pending.length}</span>` : ''}</div>
-          <div class="secondary${late ? ' late' : ''}">${esc(line)}</div></div>
-        <ha-icon class="chev" icon="${this._open ? 'mdi:chevron-up' : 'mdi:chevron-down'}"></ha-icon>
+      <div class="head">
+        <div class="main" data-act="toggle" role="button" tabindex="0" aria-expanded="${this._open}">
+          <div class="badge" style="--c:${color}"><ha-icon icon="${icon}"></ha-icon></div>
+          <div class="txt"><div class="primary">${title}${pending.length ? `<span class="count" title="Rapports en attente de prises"><ha-icon icon="mdi:heart"></ha-icon>${pending.length}</span>` : ''}</div>
+            <div class="secondary${late ? ' late' : ''}">${esc(line)}</div></div>
+        </div>
+        <button class="icon accent" data-act="pill" title="${this.count === 2 ? '2 comprimés' : 'Prise'}" aria-label="${this.count === 2 ? '2 comprimés' : 'Prise'}"><ha-icon icon="${this.count === 2 ? 'mdi:pill-multiple' : 'mdi:pill'}"></ha-icon></button>
+        <button class="icon accent" data-act="report" title="Rapport" aria-label="Rapport"><ha-icon icon="mdi:heart-plus"></ha-icon></button>
       </div>
       ${this._open ? `<div class="body">
         ${pending.map((p) => `<div class="pending"><ha-icon icon="mdi:heart"></ha-icon>Rapport ${esc(dayWord(p.at))} ${hm(p.at)} · encore ${p.remaining} prise${p.remaining > 1 ? 's' : ''}</div>`).join('')}
         <div class="bar">
-          <button class="btn main" data-act="pill"><ha-icon icon="${this.count === 2 ? 'mdi:pill-multiple' : 'mdi:pill'}"></ha-icon>${this.count === 2 ? '2 comprimés' : 'Prise'}</button>
-          <button class="btn" data-act="report"><ha-icon icon="mdi:heart-plus"></ha-icon>Rapport</button>
           <a class="more" href="${esc(a.site)}/?from=ha" target="_blank" rel="noopener" title="Voir plus" aria-label="Voir plus"><ha-icon icon="mdi:open-in-new"></ha-icon></a>
         </div>
         ${this.timeline(a)}
@@ -251,10 +252,14 @@ class NutPrepCard extends HTMLElement {
 }
 
 const CSS = `
-  ha-card { padding: 8px 12px; overflow: hidden; }
+  ha-card { padding: 8px 4px 8px 12px; overflow: hidden; }
   .empty { padding: 8px 0; color: var(--secondary-text-color); font-size: 13px; }
   button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
-  .head { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 4px 0; outline: none; }
+  .head { display: flex; align-items: center; gap: 4px; }
+  .main { flex: 1; display: flex; align-items: center; gap: 12px; min-width: 0; cursor: pointer; padding: 4px 0; outline: none; }
+  button.icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--secondary-text-color); flex: none; }
+  button.icon:hover { background: var(--secondary-background-color); }
+  button.icon.accent { color: var(--primary-color); }
   .badge { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
     color: var(--c); background: color-mix(in srgb, var(--c) 20%, transparent); }
   .txt { min-width: 0; flex: 1; }
@@ -263,8 +268,7 @@ const CSS = `
   .secondary.late { color: var(--warning-color, #ffa000); font-weight: 500; }
   .count { display: inline-flex; align-items: center; gap: 2px; font-size: 12px; color: var(--primary-color); }
   .count ha-icon { --mdc-icon-size: 14px; }
-  .chev { --mdc-icon-size: 20px; color: var(--secondary-text-color); flex: none; }
-  .body { margin-top: 4px; border-top: 1px solid var(--divider-color); padding-top: 8px; }
+  .body { margin: 4px 8px 0 0; border-top: 1px solid var(--divider-color); padding-top: 8px; }
   .pending { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--primary-color); margin-bottom: 6px; }
   .pending ha-icon { --mdc-icon-size: 14px; }
   .bar { display: flex; align-items: center; gap: 8px; }
