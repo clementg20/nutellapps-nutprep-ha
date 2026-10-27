@@ -100,8 +100,8 @@ class NutPrepCard extends HTMLElement {
           <div class="txt"><div class="primary">${title}${pending.length ? `<span class="count" title="Rapports en attente de prises"><ha-icon icon="mdi:heart"></ha-icon>${pending.length}</span>` : ''}</div>
             <div class="secondary${late ? ' late' : ''}">${esc(line)}</div></div>
         </div>
+        <button class="icon" data-act="report" title="Rapport" aria-label="Rapport"><ha-icon icon="mdi:heart-plus"></ha-icon></button>
         <button class="icon accent" data-act="pill" title="${this.count === 2 ? '2 comprimés' : 'Prise'}" aria-label="${this.count === 2 ? '2 comprimés' : 'Prise'}"><ha-icon icon="${this.count === 2 ? 'mdi:pill-multiple' : 'mdi:pill'}"></ha-icon></button>
-        <button class="icon accent" data-act="report" title="Rapport" aria-label="Rapport"><ha-icon icon="mdi:heart-plus"></ha-icon></button>
       </div>
       ${this._open ? `<div class="body">
         ${pending.map((p) => `<div class="pending"><ha-icon icon="mdi:heart"></ha-icon>Rapport ${esc(dayWord(p.at))} ${hm(p.at)} · encore ${p.remaining} prise${p.remaining > 1 ? 's' : ''}</div>`).join('')}
